@@ -1,7 +1,7 @@
 import globals as g
 import functions as f
-import supervisely_lib as sly
-from supervisely_lib.project.pointcloud_episode_project import upload_pointcloud_episode_project
+import supervisely as sly
+from supervisely.project.pointcloud_episode_project import upload_pointcloud_episode_project
 
 
 @g.my_app.callback("import_pointcloud_episode")

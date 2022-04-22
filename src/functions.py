@@ -1,11 +1,10 @@
 import os
+import shutil
 import globals as g
-import tarfile
-import zipfile
 from pathlib import Path
 
 import download_progress
-import supervisely_lib as sly
+import supervisely as sly
 
 
 def download_input_files(api, task_id, input_dir, input_file):
@@ -32,13 +31,10 @@ def download_input_files(api, task_id, input_dir, input_file):
                                                         is_size=True)
         api.file.download(g.TEAM_ID, cur_files_path, archive_path, None, progress_cb)
 
-        if tarfile.is_tarfile(archive_path):
-            with tarfile.open(archive_path) as archive:
-                archive.extractall(extract_dir)
-        elif zipfile.is_zipfile(archive_path):
-            z_file = zipfile.ZipFile(archive_path)
-            z_file.extractall(extract_dir)
-        else:
-            raise Exception("No such file".format(g.INPUT_FILE))
+        shutil.unpack_archive(archive_path, extract_dir)
         sly.fs.silent_remove(archive_path)
+
+        if len(os.listdir(g.storage_dir)) > 1:
+            g.my_app.logger.error("There must be only 1 project directory in the archive")
+            raise Exception("There must be only 1 project directory in the archive")
     return input_dir, project_name
