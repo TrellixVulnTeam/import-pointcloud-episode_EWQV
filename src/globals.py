@@ -1,10 +1,9 @@
 import os
 import sys
-from dotenv import load_dotenv
 
 import supervisely as sly
+from dotenv import load_dotenv
 from supervisely.app.v1.app_service import AppService
-
 
 app_root_directory = os.path.dirname(os.getcwd())
 sys.path.append(app_root_directory)

@@ -1,5 +1,6 @@
-import supervisely_lib as sly
 from functools import partial
+
+import supervisely_lib as sly
 
 
 def update_progress(count, api: sly.Api, task_id, progress: sly.Progress):
