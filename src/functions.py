@@ -76,8 +76,13 @@ def upload_episodes(
     items_infos = {"names": [], "paths": [], "metas": []}
 
     for item_path, item_name in zip(item_paths, item_names):
-        pcd_to_frame = {v: k for k, v in frame_pcd_map.items()}
-        item_to_ann = {name: pcd_to_frame[name] for name in item_names}
+        try:
+            pcd_to_frame = {v: k for k, v in frame_pcd_map.items()}
+            item_to_ann = {name: pcd_to_frame[name] for name in item_names}
+        except ValueError as e:
+            sly.logger.error(f"Error occurred during reading 'frame_pointcloud_map.json'. Error: '{e}'.")
+            raise e
+
         frame_idx = int(item_to_ann[item_name])
 
         item_meta = {"frame": frame_idx}
