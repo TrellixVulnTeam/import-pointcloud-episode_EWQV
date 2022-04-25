@@ -64,13 +64,13 @@ def download_input_files(api: sly.Api, task_id: int, input_dir: str, input_file:
 
 
 def upload_episodes(
-    api: sly.Api,
-    dataset_id: int,
-    dataset_name: str,
-    item_paths: list,
-    item_names: list,
-    frame_pcd_map: dict,
-    log_progress: bool,
+        api: sly.Api,
+        dataset_id: int,
+        dataset_name: str,
+        item_paths: list,
+        item_names: list,
+        frame_pcd_map: dict,
+        log_progress: bool,
 ):
     """Upload pointcloud episodes files."""
     items_infos = {"names": [], "paths": [], "metas": []}
@@ -79,9 +79,10 @@ def upload_episodes(
         try:
             pcd_to_frame = {v: k for k, v in frame_pcd_map.items()}
             item_to_ann = {name: pcd_to_frame[name] for name in item_names}
-        except ValueError as e:
-            sly.logger.error(f"Error occurred during reading 'frame_pointcloud_map.json'. Error: '{e}'.")
-            raise e
+        except KeyError as e:
+            message = f"Error occurred during reading 'frame_pointcloud_map.json'. Error: Key '{e}' not found."
+            sly.logger.error(message)
+            raise KeyError(message) from e
 
         frame_idx = int(item_to_ann[item_name])
 
@@ -111,11 +112,11 @@ def upload_episodes(
 
 
 def upload_annotations(
-    api: sly.Api,
-    dataset_id: int,
-    pcd_infos: list,
-    episode_ann: PointcloudEpisodeAnnotation,
-    uploaded_objects: KeyIdMap,
+        api: sly.Api,
+        dataset_id: int,
+        pcd_infos: list,
+        episode_ann: PointcloudEpisodeAnnotation,
+        uploaded_objects: KeyIdMap,
 ):
     """Upload pointclouds annotations."""
     frame_to_pcd_ids = {pcd_info.frame: pcd_info.id for pcd_info in pcd_infos}
@@ -125,11 +126,11 @@ def upload_annotations(
 
 
 def upload_photo_context(
-    api: sly.Api,
-    dataset_name: str,
-    pcd_infos: list,
-    base_related_images_path: str,
-    log_progress: bool,
+        api: sly.Api,
+        dataset_name: str,
+        pcd_infos: list,
+        base_related_images_path: str,
+        log_progress: bool,
 ):
     """Upload photo context for pointclouds."""
     img_infos = {"img_paths": [], "img_metas": []}
@@ -179,7 +180,7 @@ def upload_photo_context(
 
 
 def upload_pointcloud_episode_project(
-    api, project_dir, workspace_id, project_name, log_progress=False
+        api, project_dir, workspace_id, project_name, log_progress=False
 ):
     project_remotely = api.project.create(
         workspace_id,
